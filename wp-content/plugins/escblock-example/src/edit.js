@@ -11,16 +11,18 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, MediaUpload, useBlockProps } from '@wordpress/block-editor';
+import { Button } from '@wordpress/components';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-import './editor.scss';
 
+import './editor.scss';
+ */
+ 
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -29,7 +31,85 @@ import './editor.scss';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit() {
+
+const Edit = ( props ) => {
+	const {
+		attributes: { title, mediaID, mediaURL, description },
+		setAttributes,
+	} = props;
+
+	const blockProps = useBlockProps();
+
+	const onChangeTitle = ( value ) => {
+		setAttributes( { title: value } );
+	};
+
+	const onSelectImage = ( media ) => {
+		setAttributes( {
+			mediaURL: media.url,
+			mediaID: media.id,
+		} );
+	};
+
+	const onChangeDescription = ( value ) => {
+		setAttributes( { description: value } );
+	};
+
+	return (
+		<div { ...blockProps }>
+			<RichText
+				tagName="h2"
+				placeholder={ __(
+					'Write Article Title…',
+					'gutenberg-examples'
+				) }
+				value={ title }
+				onChange={ onChangeTitle }
+			/>
+			<div className="recipe-image">
+				<MediaUpload
+					onSelect={ onSelectImage }
+					allowedTypes="image"
+					value={ mediaID }
+					render={ ( { open } ) => (
+						<Button
+							className={
+								mediaID ? 'image-button' : 'button button-large'
+							}
+							onClick={ open }
+						>
+							{ ! mediaID ? (
+								__( 'Upload Image', 'gutenberg-examples' )
+							) : (
+								<img
+									src={ mediaURL }
+									alt={ __(
+										'Upload Recipe Image',
+										'gutenberg-examples'
+									) }
+								/>
+							) }
+						</Button>
+					) }
+				/>
+			</div>
+			<h3>{ __( 'Description', 'gutenberg-examples' ) }</h3>
+			<RichText
+				tagName="div"
+				multiline="p"
+				className="steps"
+				placeholder={ __(
+					'Write the description…',
+					'gutenberg-examples'
+				) }
+				value={ description }
+				onChange={ onChangeDescription }
+			/>
+		</div>
+	);
+};
+export default Edit;
+/*export default function Edit() {
 	return (
 		<div { ...useBlockProps() }>
 			<div className="hero container">
@@ -53,4 +133,4 @@ export default function Edit() {
 			</div>
 		</div>
 	);
-}
+}*/

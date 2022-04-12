@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, useBlockProps } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -22,7 +22,36 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save() {
+
+const Save = ( props ) => {
+	const {
+		attributes: { title, mediaURL, description },
+	} = props;
+
+	const blockProps = useBlockProps.save();
+	return (
+		<div { ...blockProps }>
+			<RichText.Content tagName="h2" value={ title } />
+
+			{ mediaURL && (
+				<img
+					className="recipe-image"
+					src={ mediaURL }
+					alt={ __( 'Recipe Image', 'gutenberg-examples' ) }
+				/>
+			) }
+			
+			<h3>{ __( 'Description', 'gutenberg-examples' ) }</h3>
+			<RichText.Content
+				tagName="div"
+				className="steps"
+				value={ description }
+			/>
+		</div>
+	);
+};
+export default Save;
+/*export default function save() {
 	return (
 		<div { ...useBlockProps.save() }>
 			<div className="hero container">
@@ -46,4 +75,4 @@ export default function save() {
 			</div>
 		</div>
 	);
-}
+}*/

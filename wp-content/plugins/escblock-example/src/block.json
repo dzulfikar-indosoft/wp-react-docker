@@ -3,7 +3,7 @@
 	"apiVersion": 2,
 	"name": "escblock-example/escblock-example",
 	"version": "1.0.0",
-	"title": "Escblock-example",
+	"title": "Article Custom Block",
 	"category": "widgets",
 	"icon": "smiley",
 	"supports": {
