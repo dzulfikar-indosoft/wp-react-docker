@@ -1,0 +1,34 @@
+  
+version: "3"
+services:
+  db:
+    image: mariadb:10.4
+    environment:
+      MYSQL_DATABASE: learnwp-custom-2
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql:/var/lib/mysql
+  adminer:
+    # https://github.com/wodby/docker4wordpress
+    image: wodby/adminer
+    ports:
+      - 8013:9000
+  wordpress:
+    image: wordpress:latest
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: docker
+      WORDPRESS_DB_PASSWORD: secret
+      WORDPRESS_DB_NAME: learnwp-custom-2
+      DEPLOY_ENVIRONMENT: local
+      WORDPRESS_DEBUG: 1
+    ports:
+      - 8014:80
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html
+volumes:
+  mysql:
